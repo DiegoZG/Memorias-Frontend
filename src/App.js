@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import {BrowserRouter, Route} from 'react-router-dom'
+import { Container, AppBar, Typography, Grow, Grid } from '@material-ui/core'
+import Posts from './components/Posts/Posts';
+import Form from './components/Form/Form'
+import useStyles from './styles';
+import { useDispatch } from 'react-redux';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { fetchUser, getPosts} from './actions/posts';
+import { connect } from 'react-redux' 
+import Header from './components/Header'
+import Landing from './components/Landing'
+import Dashboard from './components/Dashboard'
+
+const App = () => {
+    const [currentId, setCurrentId] = useState(null)
+    const classes = useStyles();
+    const dispatch = useDispatch();
+
+    useEffect(( ) => {
+        dispatch(getPosts());
+    }, [currentId, dispatch]);
+
+    useEffect(() => {
+        fetchUser();
+    },[])
+
+    return(
+        <Container maxWidth="lg">
+            <BrowserRouter>
+            
+            <Route exact path="/" component={Landing} />
+            <Route exact path="/posts" component={Dashboard} />
+            </BrowserRouter>
+           
+           
+            
+        </Container>
+    )
 }
 
-export default App;
+export default connect(null, fetchUser)(App);
